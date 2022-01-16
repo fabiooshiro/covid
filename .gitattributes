@@ -1,0 +1,2 @@
+# pq o github nao suporta mais do que 100m
+*.zip filter=lfs diff=lfs merge=lfs -text
