@@ -53,6 +53,6 @@ function makeAgeKey(age) {
         })
         lastMonth = monthData
     })
-    console.log(summary)
+    console.log(JSON.stringify(summary, null, 4))
     console.log('done')
 })()
