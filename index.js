@@ -23,24 +23,28 @@ function makeAgeKey(age) {
     console.log(`Field names: ${dbf.fields.map(f => f.name).join(', ')}`);
     let summary = {}
     let i = 0;
-    await dbf.readRecords(1463824, (record) => {
-        if (++i % 100000 === 0) {
-            console.log(i)
-        }
-        const nascAno = +record['DTNASC'].substring(4)
-        const obtoAno = +record['DTOBITO'].substring(4)
-        const mesObto = record['DTOBITO'].substring(2, 4)
-
-        const key = `${obtoAno}-${mesObto}`;
-        const monthData = summary[key] || { total: 0, idade: {} }
-        summary[key] = monthData
-
-        monthData.total++;
-        const age = obtoAno - nascAno;
-        const keyAge = makeAgeKey(age)
-        monthData.idade[keyAge] = monthData.idade[keyAge] || 0
-        monthData.idade[keyAge]++;
-    });
+    while(true) {
+        const records = await dbf.readRecords(100)
+        records.forEach(record => {
+            if (++i % 100000 === 0) {
+                console.log(i)
+            }
+            const nascAno = +record['DTNASC'].substring(4)
+            const obtoAno = +record['DTOBITO'].substring(4)
+            const mesObto = record['DTOBITO'].substring(2, 4)
+    
+            const key = `${obtoAno}-${mesObto}`;
+            const monthData = summary[key] || { total: 0, idade: {} }
+            summary[key] = monthData
+    
+            monthData.total++;
+            const age = obtoAno - nascAno;
+            const keyAge = makeAgeKey(age)
+            monthData.idade[keyAge] = monthData.idade[keyAge] || 0
+            monthData.idade[keyAge]++;
+        });
+    }
+    
     let lastMonth;
     Object.getOwnPropertyNames(summary).sort().forEach(monthKey => {
         const monthData = summary[monthKey]
