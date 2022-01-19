@@ -25,6 +25,7 @@ function makeAgeKey(age) {
     let i = 0;
     while(true) {
         const records = await dbf.readRecords(100)
+        if (records.length === 0) break;
         records.forEach(record => {
             if (++i % 100000 === 0) {
                 console.log(i)
